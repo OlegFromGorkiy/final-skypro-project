@@ -1,8 +1,11 @@
 package ru.skypro.homework.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.List;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,4 +28,15 @@ public class Ad {
 
     @Column(name = "title", nullable = false)
     private String title;
+
+    @Type(type = "binary")
+    @Column (name = "image")
+    private byte[] image;
+
+    @Column(name = "description")
+    private String description;
+
+    @OneToMany
+    @JoinColumn(name = "comments_id")
+    private List<Comment> comments;
 }

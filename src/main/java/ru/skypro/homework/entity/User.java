@@ -1,6 +1,7 @@
 package ru.skypro.homework.entity;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -53,4 +54,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @Type(type = "binary")
+    @Column (name = "image")
+    private byte[] image;
 }
