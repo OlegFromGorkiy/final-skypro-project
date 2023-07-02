@@ -29,9 +29,8 @@ public class Ad {
     @Column(name = "title", nullable = false)
     private String title;
 
-    @Type(type = "binary")
-    @Column (name = "image")
-    private byte[] image;
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "description")
     private String description;

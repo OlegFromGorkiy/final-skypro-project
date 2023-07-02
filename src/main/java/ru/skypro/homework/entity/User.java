@@ -54,7 +54,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    @Type(type = "binary")
-    @Column (name = "image")
-    private byte[] image;
+    @Column(name = "image")
+    private String image;
 }
