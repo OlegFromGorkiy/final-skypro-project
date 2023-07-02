@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.NewPassword;
-import ru.skypro.homework.dto.User;
+import ru.skypro.homework.dto.UserDTO;
 
 @RestController
 @RequestMapping("/users")
@@ -25,7 +25,7 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<User> getInfo() {
+    public ResponseEntity<UserDTO> getInfo() {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -35,11 +35,11 @@ public class UserController {
         if (false) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        return ResponseEntity.ok(new User());
+        return ResponseEntity.ok(new UserDTO());
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<User> changeInfo(@RequestBody User user) {
+    public ResponseEntity<UserDTO> changeInfo(@RequestBody UserDTO user) {
         if (false) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }

@@ -3,7 +3,7 @@ package ru.skypro.homework.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.Comment;
+import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.ResponseWrapperComment;
 
 @CrossOrigin(value = "http://localhost:3000")
@@ -20,8 +20,8 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<Comment> sendComment(@PathVariable(name = "id") int id,
-                                               @RequestBody Comment comment) {
+    public ResponseEntity<CommentDTO> sendComment(@PathVariable(name = "id") int id,
+                                                  @RequestBody CommentDTO comment) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -50,9 +50,9 @@ public class CommentController {
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<Comment> editComment(@PathVariable(name = "adId") int adId,
-                                               @PathVariable(name = "commentId") int commentId,
-                                               @RequestBody Comment comment) {
+    public ResponseEntity<CommentDTO> editComment(@PathVariable(name = "adId") int adId,
+                                                  @PathVariable(name = "commentId") int commentId,
+                                                  @RequestBody CommentDTO comment) {
         if (false) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }

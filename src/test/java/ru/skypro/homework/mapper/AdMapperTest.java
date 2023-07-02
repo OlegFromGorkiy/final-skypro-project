@@ -23,7 +23,7 @@ public class AdMapperTest {
     //given
     static {
         USER = new User();
-        USER.setId(1L);
+        USER.setId(1);
         USER.setEmail("email");
         USER.setPhone("phoneNumber");
         USER.setFirstName("firstName");
@@ -32,7 +32,7 @@ public class AdMapperTest {
         AD = new Ad();
         AD.setAuthor(USER);
         AD.setImage("image");
-        AD.setId(1L);
+        AD.setId(1);
         AD.setPrice(100);
         AD.setTitle("title");
         AD.setDescription("description");
@@ -42,9 +42,9 @@ public class AdMapperTest {
     private AdMapper mapper;
 
     @Test
-    public void checkAdToADS() {
+    public void checkToADS() {
         //when
-        Ads ads = mapper.adToAds(AD);
+        Ads ads = mapper.toAds(AD);
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getAuthor(), AD.getAuthor().getId());
@@ -55,9 +55,9 @@ public class AdMapperTest {
     }
 
     @Test
-    public void checkAdToFullAds() {
+    public void checkToFullAds() {
         //when
-        FullAds ads = mapper.adToFullAds(AD);
+        FullAds ads = mapper.toFullAds(AD);
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getPk(), AD.getId());
@@ -72,30 +72,30 @@ public class AdMapperTest {
     }
 
     @Test
-    public void checkAdToResponseWrapper() {
+    public void checkToResponseWrapper() {
         //given
         List<Ad> adList = new LinkedList<>();
         adList.add(AD);
         //when
-        ResponseWrapperAds responseWrapperAds = mapper.adToResponseWrapper(adList);
+        ResponseWrapperAds responseWrapperAds = mapper.toResponseWrapper(adList);
         //then
         Assertions.assertNotNull(responseWrapperAds);
         Assertions.assertEquals(responseWrapperAds.getCount(), adList.size());
         Assertions.assertEquals(responseWrapperAds.getResult(),
                 adList.stream()
-                        .map(e -> mapper.adToAds(e))
+                        .map(e -> mapper.toAds(e))
                         .collect(Collectors.toList()));
     }
 
     @Test
-    public void checkAdFromCreateAds(){
+    public void checkFromCreateAds(){
         //given
         CreateAds newAd = new CreateAds();
         newAd.setDescription("description");
         newAd.setPrice(100);
         newAd.setTitle("Title");
         //when
-        Ad ads = mapper.adFromCreateAds(newAd);
+        Ad ads = mapper.fromCreateAds(newAd);
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getDescription(), newAd.getDescription());
