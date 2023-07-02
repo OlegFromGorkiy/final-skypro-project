@@ -53,6 +53,15 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role = Role.USER;
 
+    /**
+     * path to image
+     */
     @Column(name = "image")
     private String image;
+
+    /**
+     * user password
+     */
+    @Column(name = "password")
+    private String password;
 }
