@@ -30,7 +30,7 @@ public class AdsController {
 
         Ads response = new Ads();
         response.setTitle(properties.getTitle());
-        response.setPrise(properties.getPrise());
+        response.setPrice(properties.getPrice());
         response.setTitle(properties.getTitle());
         response.setImage(image);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
@@ -73,7 +73,7 @@ public class AdsController {
 
         Ads response = new Ads();
         response.setTitle(properties.getTitle());
-        response.setPrise(properties.getPrise());
+        response.setPrice(properties.getPrice());
         response.setTitle(properties.getTitle());
 
         return ResponseEntity.ok(response);

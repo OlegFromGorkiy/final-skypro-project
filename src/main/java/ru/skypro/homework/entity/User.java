@@ -1,7 +1,6 @@
 package ru.skypro.homework.entity;
 
 import lombok.*;
-import org.hibernate.annotations.Type;
 import ru.skypro.homework.dto.Role;
 
 import javax.persistence.*;
@@ -21,7 +20,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Long id;
+    private Integer id;
 
     /**
      * Логин пользователя
@@ -52,8 +51,17 @@ public class User {
      */
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private Role role = Role.USER;
 
+    /**
+     * path to image
+     */
     @Column(name = "image")
     private String image;
+
+    /**
+     * user password
+     */
+    @Column(name = "password")
+    private String password;
 }
