@@ -1,16 +1,23 @@
 package ru.skypro.homework.service;
 
 import org.springframework.transaction.annotation.Transactional;
-import ru.skypro.homework.entity.Ad;
+import ru.skypro.homework.dto.AdDTO;
+import ru.skypro.homework.dto.CreateAds;
+import ru.skypro.homework.dto.FullAds;
+import ru.skypro.homework.dto.ResponseWrapperAds;
 
-import java.util.Collection;
 
 public interface AdService {
-    Ad createAd(Ad ad);
+    AdDTO createAd(CreateAds createAds, long id);
 
     @Transactional(readOnly = true)
-    Ad getAdById(long id);
+    ResponseWrapperAds getAllAd();
 
-    @Transactional(readOnly = true)
-    Collection<Ad> getAllAd();
+    FullAds getFullAdDto(long id);
+
+    void deleteAdDto(long id);
+
+    AdDTO updateAdDto(long id, CreateAds createAds);
+
+    ResponseWrapperAds getAllUserAd(long id);
 }

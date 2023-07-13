@@ -7,5 +7,10 @@ import java.util.List;
 @Data
 public class ResponseWrapperAds {
     private int count;
-    private List<Ads> result;
+    private List<AdDTO> result;
+    public ResponseWrapperAds(List<AdDTO> adDTOList) {
+    }
+    public ResponseWrapperAds() {
+    }
+
 }

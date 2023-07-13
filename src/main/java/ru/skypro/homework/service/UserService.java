@@ -1,5 +1,6 @@
 package ru.skypro.homework.service;
 import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 
 import javax.xml.bind.ValidationException;
@@ -28,10 +29,10 @@ public interface UserService {
     /**
      * Изменение пользователя
      *
-     * @param updatedUser Объект пользователя с новыми данными
+     * @param userDTO Объект пользователя с новыми данными
      * @return User Изменённый пользователь
      */
-    User updateUser(User updatedUser);
+    User updateUser(UserDTO userDTO);
 
     /**
      * Получение пользователя по ID

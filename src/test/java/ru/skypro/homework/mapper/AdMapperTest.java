@@ -4,7 +4,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.CreateAds;
 import ru.skypro.homework.dto.FullAds;
 import ru.skypro.homework.dto.ResponseWrapperAds;
@@ -44,14 +44,14 @@ public class AdMapperTest {
     @Test
     public void checkToADS() {
         //when
-        Ads ads = mapper.toAds(AD);
+        AdDTO adDTO = mapper.toAds(AD);
         //then
-        Assertions.assertNotNull(ads);
-        Assertions.assertEquals(ads.getAuthor(), AD.getAuthor().getId());
-        Assertions.assertEquals(ads.getImage(), AD.getImage());
-        Assertions.assertEquals(ads.getPk(), AD.getId());
-        Assertions.assertEquals(ads.getPrice(), AD.getPrice());
-        Assertions.assertEquals(ads.getTitle(), AD.getTitle());
+        Assertions.assertNotNull(adDTO);
+        Assertions.assertEquals(adDTO.getAuthor(), AD.getAuthor().getId());
+        Assertions.assertEquals(adDTO.getImage(), AD.getImage());
+        Assertions.assertEquals(adDTO.getPk(), AD.getId());
+        Assertions.assertEquals(adDTO.getPrice(), AD.getPrice());
+        Assertions.assertEquals(adDTO.getTitle(), AD.getTitle());
     }
 
     @Test
