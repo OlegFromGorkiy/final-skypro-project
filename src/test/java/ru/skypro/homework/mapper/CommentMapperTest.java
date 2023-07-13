@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.dto.ResponseWrapperComment;
+import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 
@@ -70,7 +70,7 @@ public class CommentMapperTest {
         List<Comment> comments = new LinkedList<>();
         comments.add(COMMENT);
         //when
-        ResponseWrapperComment result = mapper.toResponseWrapper(comments);
+        Comments result = mapper.toComments(comments);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getCount(), comments.size());

@@ -2,7 +2,7 @@ package ru.skypro.homework.service.impl;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.RegisterReq;
+import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.UserMapper;
@@ -37,7 +37,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    public boolean register(RegisterReq registerReq, Role role) {
+    public boolean register(Register register, Role role) {
     /*
     if (manager.userExists(registerReq.getUsername())) {
       return false;
@@ -52,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
             .build());
     return true;
     */
-        User user = userMapper.fromRegisterReq(registerReq);
+        User user = userMapper.fromRegister(register);
         user.setRole(role);
         user.setPassword(encoder.encode(user.getPassword()));//because unprotected password in database is bad solution
         if (userService.emailCheck(user)) {
