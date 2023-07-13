@@ -1,61 +1,29 @@
 package ru.skypro.homework.service;
-import ru.skypro.homework.dto.Role;
-import ru.skypro.homework.dto.UserDTO;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.entity.User;
 
-import javax.xml.bind.ValidationException;
-import java.util.Collection;
-
-/**
- * Сервис для работы с пользователем
- */
-public interface UserService {
+public interface UserService extends UserDetailsService {
+    /**
+     * Сохранение пользователя в базу
+     * @param user сохраняемый пользователь
+     */
+    void saveUser(User user);
 
     /**
-     * Создание пользователя
-     *
-     * @param user Объект пользователя
-     * @return User Созданный пользователь
+     * Поиск в базе пользователей с аналогичным email
+     * @param user пользователь чей email используется для проверки
+     * @return true если в базе уже есть пользователь с аналогичным email
      */
-    User createUser(User user) throws ValidationException;
+    boolean emailCheck(User user);
 
     /**
-     * Получение всех существующих пользователей
-     *
-     * @return Collection<User>
+     * Поиск пользователя в базе по email
+     * @param email email искомого пользователя
+     * @return null если пользователь с данным email отсутствует в базе
      */
-    Collection<User> getUsers();
+    User getByEmail(String email);
 
-    /**
-     * Изменение пользователя
-     *
-     * @param userDTO Объект пользователя с новыми данными
-     * @return User Изменённый пользователь
-     */
-    User updateUser(UserDTO userDTO);
-
-    /**
-     * Получение пользователя по ID
-     *
-     * @param id ID пользователя
-     * @return User с данным ID
-     */
-    User getUserById(long id);
-
-    /**
-     * Изменение пароля пользователя
-     *
-     * @param newPassword     новый пароль
-     * @param currentPassword старый пароль
-     */
-    void newPassword(String newPassword, String currentPassword);
-
-
-    /**
-     * Изменение роли пользователя
-     *
-     * @param id   идентификатор пользователя
-     * @param role новая роль
-     */
-    User updateRole(long id, Role role);
+    void updateUser(User user, UpdateUser update);
 }

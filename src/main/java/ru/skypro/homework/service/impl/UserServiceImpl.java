@@ -1,81 +1,87 @@
 package ru.skypro.homework.service.impl;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import ru.skypro.homework.dto.Role;
-import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.dto.UpdateUser;
+import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
-import ru.skypro.homework.exception.UserNotFoundException;
 import ru.skypro.homework.repository.UserRepository;
-import ru.skypro.homework.security.UserDetailsServiceImpl;
 import ru.skypro.homework.service.UserService;
 
-import javax.xml.bind.ValidationException;
 import java.util.Collection;
+import java.util.LinkedList;
+import java.util.Optional;
 
-import static ru.skypro.homework.dto.Role.USER;
-import static ru.skypro.homework.security.SecurityUtils.getUserDetailsFromContext;
-
-@Transactional
-@RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
+
     private final UserRepository userRepository;
-    private final UserDetailsServiceImpl userDetailsService;
-    private final PasswordEncoder passwordEncoder;
 
-    @Override
-    public User createUser(User user) throws ValidationException {
-        if (userRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException(String.format("Пользователь \"%s\" уже существует!", user.getEmail()));
-        }
-        if (user.getRole() == null) {
-            user.setRole(USER);
-        }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userRepository.save(user);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public Collection<User> getUsers() {
-        return userRepository.findAll();
+    public UserServiceImpl(UserRepository userRepository) {
+        this.userRepository = userRepository;
     }
 
     @Override
-    public User updateUser(UserDTO userDTO) {
-        User user = getUserById(getUserDetailsFromContext().getId());
-        user.setFirstName(userDTO.getFirstName());
-        user.setLastName(userDTO.getLastName());
-        user.setPhone(userDTO.getPhone());
-        return userRepository.save(user);
-    }
-
-    @Transactional(readOnly = true)
-    @Override
-    public User getUserById(long id) {
-        return userRepository.findById(id)
-                .orElseThrow(() -> new UserNotFoundException("Пользователь с id " + id + " не найден!"));
-    }
-
-    @Override
-    public void newPassword(String newPassword, String currentPassword) {
-        UserDetails userDetails = getUserDetailsFromContext();
-        if (!passwordEncoder.matches(currentPassword, userDetails.getPassword())) {
-            throw new BadCredentialsException("Неверно указан текущий пароль!");
-        }
-        userDetailsService.updatePassword(userDetails, passwordEncoder.encode(newPassword));
-    }
-
-    @Override
-    public User updateRole(long id, Role role) {
-        User user = getUserById(id);
-        user.setRole(role);
+    public void saveUser(User user) {
         userRepository.save(user);
-        return user;
+
+    }
+
+    @Override
+    public boolean emailCheck(User user) {
+        return userRepository.existsByEmail(user.getEmail());
+    }
+
+
+    @Override
+    public User getByEmail(String email) {
+        Optional<User> optional = userRepository.findByEmail(email);
+        return optional.isEmpty() ? null : optional.get();
+    }
+
+    @Override
+    public void updateUser(User user, UpdateUser update){
+        user.setFirstName(update.getFirstname());
+        user.setLastName(update.getLastName());
+        user.setPhone(update.getPhone());
+        saveUser(user);
+    }
+
+
+
+//for serDetailsService
+    /**
+     * Locates the user based on the username. In the actual implementation, the search
+     * may possibly be case sensitive, or case insensitive depending on how the
+     * implementation instance is configured. In this case, the <code>UserDetails</code>
+     * object that comes back may have a username that is of a different case than what
+     * was actually requested..
+     *
+     * @param username the username identifying the user whose data is required.
+     * @return a fully populated user record (never <code>null</code>)
+     * @throws UsernameNotFoundException if the user could not be found or the user has no
+     *                                   GrantedAuthority
+     */
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = getByEmail(username);
+        if (user == null) {
+            throw new UsernameNotFoundException(String.format("User with email address %s, not found", username));
+        }
+
+        return new org.springframework.security.core.userdetails.User(user.getEmail(),
+                user.getPassword(), mapRoleToAuthorities(user.getRole()));
+    }
+
+    private Collection<? extends GrantedAuthority> mapRoleToAuthorities(Role role) {
+        Collection<SimpleGrantedAuthority> result = new LinkedList<>();
+        result.add(new SimpleGrantedAuthority("USER"));
+        if (role == Role.ADMIN) {
+            result.add(new SimpleGrantedAuthority("ADMIN"));
+        }
+        return result;
     }
 }
