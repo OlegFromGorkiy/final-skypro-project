@@ -4,7 +4,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.UserDTO;
+import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
 
 @SpringBootTest
@@ -51,5 +53,28 @@ public class UserMapperTest {
         Assertions.assertEquals(result.getLastName(), USER.getLastName());
         Assertions.assertEquals(result.getPhone(), USER.getPhone());
         Assertions.assertEquals(result.getImage(), USER.getImage());
+    }
+
+    @Test
+    public void CheckFromRegister(){
+        //given
+        Register register = new Register();
+        register.setUsername("register@mail.com");
+        register.setPassword("password");
+        register.setFirstName("firstName");
+        register.setLastName("lastName");
+        register.setPhone("+71234567890");
+        register.setRole(Role.ADMIN);
+        //when
+        User result = mapper.fromRegister(register);
+        //then
+        Assertions.assertNotNull(result);
+
+        Assertions.assertEquals(result.getEmail(), register.getUsername());
+        Assertions.assertEquals(result.getPassword(), register.getPassword());
+        Assertions.assertEquals(result.getFirstName(), register.getFirstName());
+        Assertions.assertEquals(result.getLastName(), register.getLastName());
+        Assertions.assertEquals(result.getPhone(), register.getPhone());
+        Assertions.assertEquals(result.getRole(), register.getRole());
     }
 }
