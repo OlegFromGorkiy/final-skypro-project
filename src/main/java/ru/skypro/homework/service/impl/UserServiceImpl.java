@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
 
 
 
-//for serDetailsService
+//for UserDetailsService
     /**
      * Locates the user based on the username. In the actual implementation, the search
      * may possibly be case sensitive, or case insensitive depending on how the
