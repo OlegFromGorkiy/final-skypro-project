@@ -7,12 +7,14 @@ import ru.skypro.homework.entity.User;
 public interface UserService extends UserDetailsService {
     /**
      * Сохранение пользователя в базу
+     *
      * @param user сохраняемый пользователь
      */
     void saveUser(User user);
 
     /**
      * Поиск в базе пользователей с аналогичным email
+     *
      * @param user пользователь чей email используется для проверки
      * @return true если в базе уже есть пользователь с аналогичным email
      */
@@ -20,10 +22,17 @@ public interface UserService extends UserDetailsService {
 
     /**
      * Поиск пользователя в базе по email
+     *
      * @param email email искомого пользователя
      * @return null если пользователь с данным email отсутствует в базе
      */
     User getByEmail(String email);
 
+    /**
+     * Обновление данных пользователя
+     *
+     * @param user   пользователь чьи данные обновляются
+     * @param update данные для обновления
+     */
     void updateUser(User user, UpdateUser update);
 }
