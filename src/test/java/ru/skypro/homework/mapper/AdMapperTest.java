@@ -43,7 +43,7 @@ public class AdMapperTest {
     @Test
     public void checkToADS() {
         //when
-        AdDTO ads = mapper.toAds(AD);
+        AdDTO ads = mapper.toAdDTO(AD);
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getAuthor(), AD.getAuthor().getId());
@@ -54,9 +54,9 @@ public class AdMapperTest {
     }
 
     @Test
-    public void checkToFullAds() {
+    public void checkToExtendedAd() {
         //when
-        ExtendedAd ads = mapper.toFullAds(AD);
+        ExtendedAd ads = mapper.toExtendedAd(AD);
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getPk(), AD.getId());
@@ -82,7 +82,7 @@ public class AdMapperTest {
         Assertions.assertEquals(responseWrapperAds.getCount(), adList.size());
         Assertions.assertEquals(responseWrapperAds.getResult(),
                 adList.stream()
-                        .map(e -> mapper.toAds(e))
+                        .map(e -> mapper.toAdDTO(e))
                         .collect(Collectors.toList()));
     }
 
