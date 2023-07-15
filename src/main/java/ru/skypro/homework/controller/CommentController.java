@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.UpdateComment;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
@@ -38,42 +39,42 @@ public class CommentController {
 
     @GetMapping("/{id}/comments")
     public ResponseEntity<Comments> getComments(@PathVariable(name = "id") int id) {
-        Comments comments = commentMapper.toComments(commentService.getAll());
+        Comments comments = commentMapper.toComments(commentService.getCommentOfAd(id));
         return ResponseEntity.ok(comments);
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<CommentDTO> sendComment(@PathVariable(name = "id") int id,
-                                                  @RequestBody CommentDTO update,
+    public ResponseEntity<CommentDTO> sendComment(@PathVariable(name = "id") Ad ad,
+                                                  @RequestBody UpdateComment updateComment,
+                                                  @RequestBody User author,
                                                   Authentication authentication) {
-        Comment comment = commentService.addComment(id, update);
-        User user = userService.getByEmail(authentication.getName());
-        if (user.getRole() != Role.ADMIN) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        CommentDTO comment = mapper.toCommentDTO(commentService.createComment(ad, updateComment, author));
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-        CommentDTO createComment = mapper.toCommentDTO(comment);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createComment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(comment);
     }
+
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable(name = "adId") int adId,
-                                              @PathVariable(name = "commentId") int commentId,
+                                              @PathVariable(name = "commentId") Comment commentId,
                                               Authentication authentication) {
         Collection<Comment> comment = commentService.getComments(adId);
         if (comment == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User user = userService.getByEmail(authentication.getName());
-        if (user.getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN && !user.equals(comment)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-        commentService.deleteComment(commentId, adId);
+        commentService.deleteComment(commentId);
         return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<CommentDTO> editComment(@PathVariable(name = "adId") int adId,
-                                                  @PathVariable(name = "commentId") int commentId,
+                                                  @PathVariable(name = "commentId") Comment commentId,
                                                   @RequestBody UpdateComment update,
                                                   Authentication authentication) {
         Comment comment = commentService.update(adId, commentId, update);
@@ -81,10 +82,10 @@ public class CommentController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User user = userService.getByEmail(authentication.getName());
-        if (user.getRole() != Role.ADMIN) {
+        if (user.getRole() != Role.ADMIN && !user.equals(comment)) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(mapper.toCommentDTO(commentService
-                .update(commentId, adId, update)));
+                .update(adId, commentId, update)));
     }
 }

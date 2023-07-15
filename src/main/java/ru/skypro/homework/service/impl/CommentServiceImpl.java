@@ -1,50 +1,52 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.CommentDTO;
 import ru.skypro.homework.dto.UpdateComment;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.mapper.CommentMapper;
+import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.service.CommentService;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
 
-    public CommentServiceImpl(CommentRepository commentRepository, CommentMapper commentMapper) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.commentMapper = commentMapper;
+    }
+
+    public List<Comment> getCommentOfAd(int adId) {
+        return commentRepository.findAllByAdId(adId);
     }
 
     @Override
-    public List<Comment> getAll() {
-        return commentRepository.findAll();
-    }
-
-    @Override
-    public Comment addComment(int id, CommentDTO updateComment) {
-        Comment comment = commentMapper.fromCommentDTO(updateComment);
+    public Comment createComment(Ad ad, UpdateComment updateComment, User author) {
+        Comment comment = new Comment();
         comment.setId(comment.getId());
+        comment.setText(comment.getText());
+        comment.setCreatedAt(new Date());
+        comment.setAd(ad);
+        comment.setAuthor(author);
         commentRepository.save(comment);
         return comment;
     }
 
     @Override
-    public boolean deleteComment(int commentId, int adId) {
-        commentRepository.deleteByIdAndAdId(commentId, adId);
-        return false;
+    public void deleteComment(Comment comment) {
+        commentRepository.deleteCommentById(comment);
     }
 
     @Override
-    public Comment update(int id, int adId, UpdateComment updateComment) {
-        Comment comment = commentRepository.findByIdAndAdId(id, adId).orElseThrow();
+    public Comment update(int adId, Comment comment, UpdateComment updateComment) {
         comment.setText(updateComment.getText());
-        return commentRepository.save(comment);
+        comment.setCreatedAt(new Date());
+        commentRepository.save(comment);
+        return comment;
     }
 
     @Override
