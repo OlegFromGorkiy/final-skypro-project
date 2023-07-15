@@ -25,9 +25,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void saveUser(User user) {
-        userRepository.save(user);
-
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     @Override
@@ -43,16 +42,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(User user, UpdateUser update){
+    public User updateUser(User user, UpdateUser update) {
         user.setFirstName(update.getFirstname());
         user.setLastName(update.getLastName());
         user.setPhone(update.getPhone());
-        saveUser(user);
+        return saveUser(user);
     }
 
 
-
-//for UserDetailsService
+//UserDetailsService implementation
     /**
      * Locates the user based on the username. In the actual implementation, the search
      * may possibly be case sensitive, or case insensitive depending on how the

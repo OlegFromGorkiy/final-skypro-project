@@ -26,8 +26,8 @@ public class AdServiceImpl implements AdService {
     }
 
     @Override
-    public void saveAd(Ad ad) {
-        adRepository.save(ad);
+    public Ad saveAd(Ad ad) {
+       return adRepository.save(ad);
     }
 
     @Override
@@ -38,8 +38,7 @@ public class AdServiceImpl implements AdService {
         ad.setTitle(newAd.getTitle());
         ad.setImage(imagePath);
         ad.setDescription(newAd.getDescription());
-        saveAd(ad);
-        return ad;
+        return saveAd(ad);
     }
 
     @Override
@@ -58,8 +57,7 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(update.getPrice());
         ad.setTitle(update.getTitle());
         ad.setDescription(update.getDescription());
-        saveAd(ad);
-        return ad;
+        return saveAd(ad);
     }
 
     @Override

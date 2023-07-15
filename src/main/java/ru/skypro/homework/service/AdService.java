@@ -17,9 +17,10 @@ public interface AdService {
     /**
      * Сохранеие объявления в базу
      *
-     * @param ad объявление которое требуется сохранить
+     * @param ad объявление которое требуется сохранить; не должно быть null
+     * @return сохраненный в базу объект; никогда не будет null
      */
-    void saveAd(Ad ad);
+    Ad saveAd(Ad ad);
 
     /**
      * Создание нового объявления и сохранение его в базу.
@@ -42,7 +43,7 @@ public interface AdService {
     /**
      * Удаление объявления из базы
      *
-     * @param ad объявление которое следует удалить
+     * @param ad объявление которое следует удалить; не должно быть null
      */
     void deleteAd(Ad ad);
 
@@ -51,7 +52,7 @@ public interface AdService {
      *
      * @param ad     объявление где будут обновлены данные
      * @param update данные для обновления
-     * @return обновленной объявление
+     * @return обновленной объявление; никогда не будет null
      */
     Ad updateAd(Ad ad, UpdateAd update);
 

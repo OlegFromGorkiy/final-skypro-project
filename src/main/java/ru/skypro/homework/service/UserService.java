@@ -8,9 +8,10 @@ public interface UserService extends UserDetailsService {
     /**
      * Сохранение пользователя в базу
      *
-     * @param user сохраняемый пользователь
+     * @param user сохраняемый пользователь; не должен быть null
+     * @return сохраненный пользователь; никогда не будет null
      */
-    void saveUser(User user);
+    User saveUser(User user);
 
     /**
      * Поиск в базе пользователей с аналогичным email
@@ -31,8 +32,9 @@ public interface UserService extends UserDetailsService {
     /**
      * Обновление данных пользователя
      *
-     * @param user   пользователь чьи данные обновляются
+     * @param user   пользователь чьи данные обновляются; не должен быть null
      * @param update данные для обновления
+     * @return обновленный пользователь сохраненный в базе; никогда не будет null
      */
-    void updateUser(User user, UpdateUser update);
+    User updateUser(User user, UpdateUser update);
 }
