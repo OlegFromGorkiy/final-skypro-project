@@ -12,10 +12,9 @@ import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.mapper.CommentMapper;
+import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.UserService;
-
-import java.util.Collection;
 
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -25,15 +24,17 @@ public class CommentController {
     private final CommentMapper commentMapper;
     private final CommentService commentService;
     private final UserService userService;
+    private final AdService adService;
     private final CommentMapper mapper;
 
     public CommentController(CommentMapper commentMapper,
                              CommentService commentService,
                              UserService userService,
-                             CommentMapper mapper) {
+                             AdService adService, CommentMapper mapper) {
         this.commentMapper = commentMapper;
         this.commentService = commentService;
         this.userService = userService;
+        this.adService = adService;
         this.mapper = mapper;
     }
 
@@ -44,12 +45,13 @@ public class CommentController {
     }
 
     @PostMapping("/{id}/comments")
-    public ResponseEntity<CommentDTO> sendComment(@PathVariable(name = "id") Ad ad,
+    public ResponseEntity<CommentDTO> sendComment(@PathVariable(name = "id") int id,
                                                   @RequestBody UpdateComment updateComment,
-                                                  @RequestBody User author,
                                                   Authentication authentication) {
-        CommentDTO comment = mapper.toCommentDTO(commentService.createComment(ad, updateComment, author));
-        if (comment == null) {
+        User author = userService.getByEmail(authentication.getName());
+        CommentDTO comment = mapper.toCommentDTO(commentService.createComment(id, updateComment, author));
+        Ad ad = adService.getById(id);
+        if (ad == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(comment);
@@ -58,14 +60,15 @@ public class CommentController {
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<Void> deleteComment(@PathVariable(name = "adId") int adId,
-                                              @PathVariable(name = "commentId") Comment commentId,
+                                              @PathVariable(name = "commentId") int commentId,
                                               Authentication authentication) {
-        Collection<Comment> comment = commentService.getComments(adId);
-        if (comment == null) {
+        Ad ad = adService.getById(adId);
+        if (ad == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User user = userService.getByEmail(authentication.getName());
-        if (user.getRole() != Role.ADMIN && !user.equals(comment)) {
+        Comment comment = commentService.getCommentById(commentId);
+        if (user.getRole() != Role.ADMIN && !user.equals(comment.getAuthor())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         commentService.deleteComment(commentId);
@@ -77,15 +80,16 @@ public class CommentController {
                                                   @PathVariable(name = "commentId") Comment commentId,
                                                   @RequestBody UpdateComment update,
                                                   Authentication authentication) {
-        Comment comment = commentService.update(adId, commentId, update);
-        if (comment == null) {
+        Ad ad = adService.getById(adId);
+        if (ad == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
         User user = userService.getByEmail(authentication.getName());
-        if (user.getRole() != Role.ADMIN && !user.equals(comment)) {
+        Comment comment = commentService.update(commentId, update);
+        if (user.getRole() != Role.ADMIN && !user.equals(comment.getAuthor())) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
         return ResponseEntity.ok(mapper.toCommentDTO(commentService
-                .update(adId, commentId, update)));
+                .update(commentId, update)));
     }
 }

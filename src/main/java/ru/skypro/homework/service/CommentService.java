@@ -1,7 +1,6 @@
 package ru.skypro.homework.service;
 
 import ru.skypro.homework.dto.UpdateComment;
-import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 
@@ -19,19 +18,24 @@ public interface CommentService {
     List<Comment> getCommentOfAd(int adId);
 
     /**
+     * Получение комментария по id
+     */
+    Comment getCommentById(int commentId);
+
+    /**
      * Создание нового комментария
      */
-    Comment createComment(Ad ad, UpdateComment updateComment, User author);
+    Comment createComment(int id, UpdateComment updateComment, User author);
 
     /**
      * Удалить комментарий
      */
-    void deleteComment(Comment comment);
+    void deleteComment(int commentId);
 
     /**
      * Обновить комментарий
      */
-    Comment update(int adId, Comment comment, UpdateComment updateComment);
+    Comment update(Comment comment, UpdateComment updateComment);
 
     /**
      * Получить комментарий по объявлению
