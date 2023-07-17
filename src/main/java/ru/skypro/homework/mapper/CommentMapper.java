@@ -2,7 +2,7 @@ package ru.skypro.homework.mapper;
 
 import org.mapstruct.Mapper;
 import ru.skypro.homework.dto.CommentDTO;
-import ru.skypro.homework.dto.ResponseWrapperComment;
+import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 
@@ -19,11 +19,11 @@ public interface CommentMapper {
         result.setAuthorImage(comment.getAuthor().getImage());
         result.setAuthorFirstName(comment.getAuthor().getFirstName());
         result.setCreatedAt(comment.getCreatedAt().getTime());
-        result.setPk(comment.getId());
+        result.setPk(comment.getAd().getId());
         result.setText(comment.getText());
         return result;
     }
-
+//вроде не нужен в обновленном АПИ. Пока оставлю.
     default Comment fromCommentDTO(CommentDTO comment) {
         Comment result = new Comment();
         //need to change with service
@@ -38,8 +38,8 @@ public interface CommentMapper {
         return result;
     }
 
-    default ResponseWrapperComment toResponseWrapper(List<Comment> comments) {
-        ResponseWrapperComment result = new ResponseWrapperComment();
+    default Comments toComments(List<Comment> comments) {
+        Comments result = new Comments();
         result.setCount(comments.size());
         result.setResult(comments.stream()
                 .map(this::toCommentDTO)
