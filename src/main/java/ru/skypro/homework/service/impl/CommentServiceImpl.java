@@ -2,13 +2,12 @@ package ru.skypro.homework.service.impl;
 
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.UpdateComment;
+import ru.skypro.homework.entity.Ad;
 import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.CommentRepository;
-import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.CommentService;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -16,15 +15,14 @@ import java.util.Optional;
 @Service
 public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
-    private final AdService adService;
 
-    public CommentServiceImpl(CommentRepository commentRepository, AdService adService) {
+    public CommentServiceImpl(CommentRepository commentRepository) {
         this.commentRepository = commentRepository;
-        this.adService = adService;
     }
 
-    public List<Comment> getCommentOfAd(int adId) {
-        return commentRepository.findAllByAdId(adId);
+    @Override
+    public List<Comment> getCommentByAd(Ad ad) {
+        return commentRepository.findAllByAd(ad);
     }
 
     @Override
@@ -34,14 +32,13 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment createComment(int id, UpdateComment updateComment, User author) {
+    public Comment createComment(Ad ad, UpdateComment update, User author) {
         Comment comment = new Comment();
-        comment.setText(comment.getText());
+        comment.setText(update.getText());
         comment.setCreatedAt(new Date());
-        comment.setAd(adService.getById(id));
+        comment.setAd(ad);
         comment.setAuthor(author);
-        commentRepository.save(comment);
-        return comment;
+        return commentRepository.save(comment);
     }
 
     @Override
@@ -50,15 +47,9 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public Comment update(Comment comment, UpdateComment updateComment) {
-        comment.setText(updateComment.getText());
+    public Comment update(Comment comment, UpdateComment update) {
+        comment.setText(update.getText());
         comment.setCreatedAt(new Date());
-        commentRepository.save(comment);
-        return comment;
-    }
-
-    @Override
-    public Collection<Comment> getComments(int adsId) {
-        return commentRepository.findAllByAdId(adsId);
+        return commentRepository.save(comment);
     }
 }

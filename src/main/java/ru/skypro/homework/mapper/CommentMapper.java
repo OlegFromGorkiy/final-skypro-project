@@ -19,7 +19,7 @@ public interface CommentMapper {
         result.setAuthorImage(comment.getAuthor().getImage());
         result.setAuthorFirstName(comment.getAuthor().getFirstName());
         result.setCreatedAt(comment.getCreatedAt().getTime());
-        result.setPk(comment.getId());
+        result.setPk(comment.getAd().getId());
         result.setText(comment.getText());
         return result;
     }
