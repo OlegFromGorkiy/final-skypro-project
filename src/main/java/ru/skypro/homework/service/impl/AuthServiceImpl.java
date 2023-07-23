@@ -52,12 +52,13 @@ public class AuthServiceImpl implements AuthService {
             .build());
     return true;
     */
+
+        if (userService.emailCheck(register.getUsername())) {
+            return false;
+        }
         User user = userMapper.fromRegister(register);
         user.setRole(role);
         user.setPassword(encoder.encode(user.getPassword()));//because unprotected password in database is bad solution
-        if (userService.emailCheck(user)) {
-            return false;
-        }
         userService.saveUser(user);
         return true;
     }

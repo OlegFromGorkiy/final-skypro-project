@@ -31,6 +31,5 @@ public interface AdMapper {
                 .collect(Collectors.toList()));
         return ads;
     }
-//закоментил потому что проще написать метод в сервисе
 //    Ad fromUpdateAds(UpdateAd updateAd);
 }

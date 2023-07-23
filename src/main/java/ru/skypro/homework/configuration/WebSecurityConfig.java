@@ -10,7 +10,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.impl.CustomUserDetailsService;
 
 @Configuration
 public class WebSecurityConfig {
@@ -24,11 +24,11 @@ public class WebSecurityConfig {
             "/register"
     };
 
-    private UserService userService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserService(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
 /*
     @Bean
@@ -48,7 +48,7 @@ public class WebSecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userService);
+        authenticationProvider.setUserDetailsService(userDetailsService);
         return authenticationProvider;
     }
 
