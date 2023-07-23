@@ -10,20 +10,30 @@ import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exception.ForbiddenException;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.FileService;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+    private final Path DIRECTORY_PATH = Path.of("image/");
     private final UserMapper mapper;
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
+    private final UserService userService;
+    private final FileService fileService;
 
-    public UserServiceImpl(UserMapper mapper, UserRepository userRepository, PasswordEncoder encoder) {
+    public UserServiceImpl(UserMapper mapper, UserRepository userRepository, PasswordEncoder encoder, UserService userService, FileService fileService) {
         this.mapper = mapper;
         this.userRepository = userRepository;
         this.encoder = encoder;
+        this.userService = userService;
+        this.fileService = fileService;
     }
 
     @Override
@@ -70,5 +80,23 @@ public class UserServiceImpl implements UserService {
         user.setLastName(update.getLastName());
         user.setPhone(user.getPhone());
         saveUser(user);
+    }
+
+    @Override
+    public void updateImage(String image) {
+        User user = new User();
+        byte[] imageBytes = image.getBytes();
+        user.setImage(Arrays.toString(imageBytes));
+        Path filePath = Paths.get(String.valueOf(DIRECTORY_PATH), image);
+        try {
+            fileService.readFile(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            fileService.saveFile(filePath, imageBytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

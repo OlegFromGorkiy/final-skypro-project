@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdService;
 
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")
@@ -59,11 +61,10 @@ public class AdController {
     @PatchMapping("/{id}/image")
     public ResponseEntity<String> editImageAd(@PathVariable(name = "id") int id,
                                               @RequestBody String image) {
-
-        if (false) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        try {
+            return ResponseEntity.ok(adService.updateImage(id, image));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
-
-        return ResponseEntity.ok(image);
     }
 }

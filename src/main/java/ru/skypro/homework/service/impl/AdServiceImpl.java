@@ -14,23 +14,34 @@ import ru.skypro.homework.exception.NotFoundElement;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdService;
+import ru.skypro.homework.service.FileService;
 import ru.skypro.homework.service.UserService;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AdServiceImpl implements AdService {
 
+    private final Path DIRECTORY_PATH = Path.of("image/");
     private final AdRepository adRepository;
     private final AdMapper mapper;
     private final UserService userService;
+    private final FileService fileService;
+    private final AdService adService;
+    private final Ad ad;
 
-
-    public AdServiceImpl(AdRepository adRepository, AdMapper mapper, UserService userService) {
+    public AdServiceImpl(AdRepository adRepository, AdMapper mapper, UserService userService, FileService fileService, AdService adService, Ad ad) {
         this.adRepository = adRepository;
         this.mapper = mapper;
         this.userService = userService;
+        this.fileService = fileService;
+        this.adService = adService;
+        this.ad = ad;
     }
 
     @Override
@@ -100,5 +111,24 @@ public class AdServiceImpl implements AdService {
         if (user.getRole() != Role.ADMIN && !user.equals(ad.getAuthor())) {
             throw new ForbiddenException(String.format("%s can't edit or delete this Ad", user.getEmail()));
         }
+    }
+
+    @Override
+    public String updateImage(Integer id, String image){
+        Ad ad = adService.getById(id);
+        byte[] imageBytes = image.getBytes();
+        ad.setImage(Arrays.toString(imageBytes));
+        Path filePath = Paths.get(String.valueOf(DIRECTORY_PATH), image);
+        try {
+            fileService.readFile(filePath);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            fileService.saveFile(filePath, imageBytes);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return image;
     }
 }

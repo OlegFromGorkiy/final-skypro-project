@@ -7,6 +7,8 @@ import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.dto.UpdateAd;
 import ru.skypro.homework.entity.Ad;
 
+import java.io.IOException;
+
 
 public interface AdService {
     /**
@@ -75,4 +77,6 @@ public interface AdService {
      * @return список всех объявлений от авторизированного пользователя в виде объекта DTO
      */
     Ads getAllByAuthor(Authentication authentication);
+
+    String updateImage(Integer id, String image) throws IOException;
 }

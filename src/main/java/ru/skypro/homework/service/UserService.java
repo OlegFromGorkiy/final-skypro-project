@@ -61,4 +61,6 @@ public interface UserService {
      * @param authentication данные аутентификации пользователя
      */
     void updateInfo(UpdateUser update, Authentication authentication);
+
+    void updateImage(String image);
 }
