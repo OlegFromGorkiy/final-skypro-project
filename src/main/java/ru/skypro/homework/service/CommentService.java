@@ -1,21 +1,21 @@
 package ru.skypro.homework.service;
 
+import org.springframework.security.core.Authentication;
+import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.UpdateComment;
-import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.Comment;
-import ru.skypro.homework.entity.User;
 
-import java.util.List;
+import ru.skypro.homework.entity.Comment;
 
 public interface CommentService {
 
     /**
      * Получить список комментариев объявления
      *
-     * @param ad объявление по которому осуществляется выборка
-     * @return дто со списком комментариев
+     * @param adId идентификатор объявление по которому осуществляется выборка
+     * @return DTO со списком комментариев
      */
-    List<Comment> getCommentByAd(Ad ad);
+    Comments getCommentByAdId(int adId);
 
     /**
      * Получение комментария по id
@@ -28,24 +28,30 @@ public interface CommentService {
     /**
      * Создание нового комментария и сохраниение его в базу данных
      *
-     * @param ad     комментируемое объявление
-     * @param update текст комментария в виде объекта DTO
-     * @param author автор комментария
-     * @return созданный коментарий
+     * @param adId           идентификатор объявления которое комментируют
+     * @param update         текст комментария в виде объекта DTO
+     * @param authentication данные авторизированного пользователя, автора комментария
+     * @return созданный коментарий в виде объекта DTO
      */
-    Comment createComment(Ad ad, UpdateComment update, User author);
+    CommentDTO createComment(int adId, UpdateComment update, Authentication authentication);
 
     /**
-     * Удалить комментарий
-     */
-    void deleteComment(int commentId);
-
-    /**
-     * Обновление текста комментария и сохранение его в базу данных
+     * Удаление комментария
      *
-     * @param comment обновляемый комментарий
-     * @param update  текст комментария в виде объекта DTO
-     * @return обновленный комментарий
+     * @param adId           идентификатор объявления которому принадлежит комментарий
+     * @param commentId      идетификатор удаляемого комментария
+     * @param authentication данные авторизированного пользователя, который удаляет комментарий
      */
-    Comment update(Comment comment, UpdateComment update);
+    void deleteComment(int adId, int commentId, Authentication authentication);
+
+    /**
+     * Обновление комментария
+     *
+     * @param adId           идентификатор объявления которому принадлежит комментарий
+     * @param commentId      идетификатор обновляемого комментария
+     * @param update         данные для обновления комментария в виде объекта DTO
+     * @param authentication данные авторизированного пользователя, который обновляет комментарий
+     * @return обновленный коментарий в виде объекта DTO
+     */
+    CommentDTO update(int adId, int commentId, UpdateComment update, Authentication authentication);
 }

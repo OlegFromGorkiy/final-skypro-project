@@ -54,7 +54,7 @@ public interface AdService {
      * Удаление объявления
      *
      * @param id             идентификатор объявления
-     * @param authentication данные авторизированного пользователя
+     * @param authentication данные авторизированного пользователя, должен быть автор объявления или администратор
      */
     void deleteAd(int id, Authentication authentication);
 
