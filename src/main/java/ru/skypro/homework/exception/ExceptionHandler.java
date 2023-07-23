@@ -11,4 +11,9 @@ public class ExceptionHandler {
     public ResponseEntity<String> forbiddenException(ForbiddenException exception, WebRequest request) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.FORBIDDEN);
     }
+
+    @org.springframework.web.bind.annotation.ExceptionHandler(NotFoundElement.class)
+    public ResponseEntity<String> notFoundElement(NotFoundElement exception, WebRequest request){
+        return new ResponseEntity<>(exception.getMessage(),HttpStatus.NOT_FOUND);
+    }
 }
