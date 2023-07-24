@@ -1,20 +1,21 @@
 package ru.skypro.homework.controller;
 
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.service.UserService;
-
 
 @RestController
 @RequestMapping("/users")
 @CrossOrigin(value = "http://localhost:3000")
 public class UserController {
     private final UserService userService;
-    //   private final Logger logger = LoggerFactory.getLogger(UserController.class);
+ //   private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     public UserController(UserService userService) {
         this.userService = userService;
@@ -34,13 +35,14 @@ public class UserController {
 
     @PatchMapping("/me")
     public ResponseEntity<UpdateUser> changeInfo(@RequestBody UpdateUser update, Authentication authentication) {
-        userService.updateInfo(update, authentication);
+        userService.updateInfo(update,authentication);
         return ResponseEntity.ok(update);
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity<Void> changeImage(@RequestBody String image) {
-        userService.updateImage(image);
+    public ResponseEntity<Void> changeImage(@RequestBody MultipartFile image, Authentication authentication) {
+        userService.setImage(image, authentication);
         return ResponseEntity.ok().build();
     }
+
 }

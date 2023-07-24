@@ -1,6 +1,8 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
@@ -50,6 +52,7 @@ public interface UserService {
 
     /**
      * Информация о опльзователе в виде DTO
+     *
      * @param authentication данные аутентификации пользователя
      * @return DTO с данными пользователя
      */
@@ -57,10 +60,32 @@ public interface UserService {
 
     /**
      * Обновление данных пользователя
-     * @param update новые данные пользователя в виде DTO
+     *
+     * @param update         новые данные пользователя в виде DTO
      * @param authentication данные аутентификации пользователя
      */
     void updateInfo(UpdateUser update, Authentication authentication);
 
-    void updateImage(String image);
+    /**
+     * Устанавливаее новый аватар. Картинка сохраняется. Путь до картинки передается в базу.
+     *
+     * @param image          файл картинки из запроса
+     * @param authentication данные аутентификации пользователя
+     */
+    void setImage(MultipartFile image, Authentication authentication);
+
+    /**
+     * Получение аватара пользователя
+     *
+     * @param email имя пользователя
+     * @return содержимое картинки аватара
+     */
+    byte[] getImage(String email);
+
+    /**
+     * Получение типа изображения
+     * @param email имя пользователя
+     * @return тип изображения как объект MediaType
+     */
+    MediaType getImageType(String email);
 }

@@ -1,9 +1,11 @@
 package ru.skypro.homework.controller;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.service.AdService;
 
@@ -28,7 +30,7 @@ public class AdController {
 
     @PostMapping
     public ResponseEntity<AdDTO> createNewAd(@RequestBody UpdateAd newAd,
-                                             @RequestBody String image, Authentication authentication) {
+                                             @RequestBody MultipartFile image, Authentication authentication) {
         //need some code for image in service
         AdDTO result = adService.createAd(newAd, authentication, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
@@ -59,10 +61,14 @@ public class AdController {
     }
 
     @PatchMapping("/{id}/image")
-    public ResponseEntity<String> editImageAd(@PathVariable(name = "id") int id,
-                                              @RequestBody String image) {
+    public ResponseEntity<byte[]> editImageAd(@PathVariable(name = "id") int id,
+                                              @RequestBody MultipartFile image, Authentication authentication) {
         try {
-            return ResponseEntity.ok(adService.updateImage(id, image));
+            adService.updateImage(id, image, authentication);
+            return ResponseEntity
+                    .ok()
+                    .contentType(MediaType.APPLICATION_OCTET_STREAM)
+                    .body(image.getBytes());
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

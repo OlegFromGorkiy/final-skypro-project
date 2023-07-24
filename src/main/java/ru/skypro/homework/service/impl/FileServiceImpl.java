@@ -5,13 +5,11 @@ import ru.skypro.homework.service.FileService;
 
 import java.io.*;
 import java.nio.file.Path;
-
 @Service
 public class FileServiceImpl implements FileService {
 
     @Override
     public void saveFile(Path path, byte[] source) throws IOException {
-
         try (FileOutputStream fos = new FileOutputStream(path.toFile());
              BufferedOutputStream bof = new BufferedOutputStream(fos, 1024);
              BufferedInputStream bis = new BufferedInputStream(new ByteArrayInputStream(source), 1024)) {

@@ -1,13 +1,13 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdDTO;
 import ru.skypro.homework.dto.Ads;
 import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.dto.UpdateAd;
 import ru.skypro.homework.entity.Ad;
-
-import java.io.IOException;
 
 
 public interface AdService {
@@ -31,10 +31,10 @@ public interface AdService {
      *
      * @param newAd          DTO c данными объявления
      * @param authentication данные авторизированного пользователя, автора объявления
-     * @param image          изображение как строка (необходимо извлечь байты)
+     * @param image          изображение как объект MultipartFile
      * @return сохраненный в базу объект в виде объекта DTO
      */
-    AdDTO createAd(UpdateAd newAd, Authentication authentication, String image);
+    AdDTO createAd(UpdateAd newAd, Authentication authentication, MultipartFile image);
 
     /**
      * Вся информация из объявления
@@ -63,7 +63,7 @@ public interface AdService {
     /**
      * Обновление данных в объявлении и сохранение изменений в базе
      *
-     * @param id             объявление где будут обновлены данные
+     * @param id             идентификатор объявления где будут обновлены данные
      * @param update         данные для обновления в виде объекта DTO
      * @param authentication данные авторизированного пользователя, должен быть автор объявления или администратор
      * @return обновленное объявление в виде объекта DTO
@@ -78,5 +78,28 @@ public interface AdService {
      */
     Ads getAllByAuthor(Authentication authentication);
 
-    String updateImage(Integer id, String image) throws IOException;
+    /**
+     * Обновление фото в объявлении
+     *
+     * @param id             идентификатор объявления где будут обновлены данные
+     * @param image          файл картинки из запроса
+     * @param authentication данные аутентификации пользователя
+     */
+    void updateImage(int id, MultipartFile image, Authentication authentication);
+
+    /**
+     * Получение фото из объявления
+     *
+     * @param id идентификатор объявления
+     * @return содержимое фото
+     */
+    byte[] getImage(int id);
+
+    /**
+     * Получение типа изображения
+     *
+     * @param id идентификатор объявления
+     * @return тип изображения как объект MediaType
+     */
+    MediaType getImageType(int id);
 }
