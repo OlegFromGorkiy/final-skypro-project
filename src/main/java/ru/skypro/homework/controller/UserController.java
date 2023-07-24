@@ -1,10 +1,10 @@
 package ru.skypro.homework.controller;
 
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
@@ -40,10 +40,8 @@ public class UserController {
     }
 
     @PatchMapping("/me/image")
-    public ResponseEntity<Void> changeImage(@RequestBody String image) {
-        if (false) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+    public ResponseEntity<Void> changeImage(@RequestBody MultipartFile image, Authentication authentication) {
+        userService.setImage(image, authentication);
         return ResponseEntity.ok().build();
     }
 
