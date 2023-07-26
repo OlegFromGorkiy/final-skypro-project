@@ -8,7 +8,7 @@ import ru.skypro.homework.entity.User;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-
+    @Mapping(source = "role", target = "role")
     UserDTO toUserDTO(User user);
 
     User fromUserDTO(UserDTO user);

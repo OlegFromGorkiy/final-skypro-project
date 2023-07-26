@@ -42,7 +42,7 @@ public interface CommentMapper {
     default Comments toComments(List<Comment> comments) {
         Comments result = new Comments();
         result.setCount(comments.size());
-        result.setResult(comments.stream()
+        result.setResults(comments.stream()
                 .map(this::toCommentDTO)
                 .collect(Collectors.toList()));
         return result;
