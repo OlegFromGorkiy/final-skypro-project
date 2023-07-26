@@ -22,6 +22,7 @@ public class Comment {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "date")
     private Date createdAt;
 
     @ManyToOne

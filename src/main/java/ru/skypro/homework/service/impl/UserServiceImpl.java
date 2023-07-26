@@ -63,7 +63,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) {
         Optional<User> optional = userRepository.findByEmail(email);
-        return optional.isEmpty() ? null : optional.get();
+        return optional.isEmpty() ? null : optional.get();// возможно стоит кинут ошибку
     }
 
     @Override
@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
             }
             fileService.saveFile(path, image.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(e);//какая нибудь своя ошибка желательна
         }
         user.setImage(path.toString());
         saveUser(user);
