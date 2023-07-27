@@ -21,7 +21,8 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/ads"
     };
 
     private CustomUserDetailsService userDetailsService;
@@ -39,7 +40,7 @@ public class WebSecurityConfig {
                         .username("user@gmail.com")
                         .password("password")
                         .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
-                        .roles("USER")
+                        .roles("USER", "ADMIN")
                         .build();
         return new InMemoryUserDetailsManager(user);
     }

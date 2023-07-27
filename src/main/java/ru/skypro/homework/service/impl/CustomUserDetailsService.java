@@ -46,7 +46,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Collection<SimpleGrantedAuthority> result = new LinkedList<>();
         result.add(new SimpleGrantedAuthority("USER"));
         if (role == Role.ADMIN) {
-            result.add(new SimpleGrantedAuthority("ADMIN"));
+            result.add(new SimpleGrantedAuthority("ADMIN")); //Granted Authorities=[ROLE_ADMIN, ROLE_USER]
         }
         return result;
     }

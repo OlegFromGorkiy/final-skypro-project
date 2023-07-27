@@ -61,8 +61,9 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(newAd.getPrice());
         ad.setTitle(newAd.getTitle());
         ad.setDescription(newAd.getDescription());
+        saveAd(ad);
         setImage(image, ad);
-        return mapper.toAdDTO(ad);
+        return mapper.toAdDTO(saveAd(ad));
     }
 
     @Override
@@ -98,8 +99,8 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Ads getAllByAuthor(Authentication authentication) {
-        int authorId = userService.getFromAuthentication(authentication).getId();
-        List<Ad> ads = adRepository.findAllByAuthorId(authorId);
+        User author = userService.getFromAuthentication(authentication);
+        List<Ad> ads = adRepository.findAllByAuthor(author);
         return mapper.toAds(ads);
     }
 
