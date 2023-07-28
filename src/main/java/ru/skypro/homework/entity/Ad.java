@@ -35,6 +35,6 @@ public class Ad {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "ad")
+    @OneToMany(mappedBy = "ad", orphanRemoval = true)
     private List<Comment> comments;
 }
