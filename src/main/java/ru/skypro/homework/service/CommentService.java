@@ -7,6 +7,9 @@ import ru.skypro.homework.dto.UpdateComment;
 
 import ru.skypro.homework.entity.Comment;
 
+/**
+ * Сервис для работы с комментариями
+ */
 public interface CommentService {
 
     /**

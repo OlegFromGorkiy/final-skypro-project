@@ -9,7 +9,9 @@ import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.dto.UpdateAd;
 import ru.skypro.homework.entity.Ad;
 
-
+/**
+ * Сервис для работы с объявлениями
+ */
 public interface AdService {
     /**
      * получить все объявления с базы

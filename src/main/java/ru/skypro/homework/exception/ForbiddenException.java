@@ -1,5 +1,8 @@
 package ru.skypro.homework.exception;
 
+/**
+ * Исключение связанное с недостатком прав
+ */
 public class ForbiddenException extends RuntimeException {
 
     /**

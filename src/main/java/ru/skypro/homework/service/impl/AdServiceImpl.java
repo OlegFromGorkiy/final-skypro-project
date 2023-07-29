@@ -14,6 +14,7 @@ import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exception.ForbiddenException;
 import ru.skypro.homework.exception.NotFoundElement;
+import ru.skypro.homework.exception.ReadOrWriteException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdService;
@@ -61,8 +62,9 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(newAd.getPrice());
         ad.setTitle(newAd.getTitle());
         ad.setDescription(newAd.getDescription());
+        saveAd(ad);
         setImage(image, ad);
-        return mapper.toAdDTO(ad);
+        return mapper.toAdDTO(saveAd(ad));
     }
 
     @Override
@@ -98,8 +100,8 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public Ads getAllByAuthor(Authentication authentication) {
-        int authorId = userService.getFromAuthentication(authentication).getId();
-        List<Ad> ads = adRepository.findAllByAuthorId(authorId);
+        User author = userService.getFromAuthentication(authentication);
+        List<Ad> ads = adRepository.findAllByAuthor(author);
         return mapper.toAds(ads);
     }
 
@@ -128,7 +130,7 @@ public class AdServiceImpl implements AdService {
             }
             fileService.saveFile(path, image.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("Ad's image was not saved", e);
         }
         ad.setImage(path.toString());
         saveAd(ad);
@@ -140,7 +142,7 @@ public class AdServiceImpl implements AdService {
         try {
             return fileService.readFile(Path.of(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("Ad's image was not read", e);
         }
     }
 

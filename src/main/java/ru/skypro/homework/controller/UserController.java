@@ -1,6 +1,5 @@
 package ru.skypro.homework.controller;
 
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +8,10 @@ import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.service.UserService;
+
+/**
+ * контроллер для обработки запросов на изменение данных пользователя
+ */
 
 @RestController
 @RequestMapping("/users")

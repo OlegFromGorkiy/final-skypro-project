@@ -9,6 +9,10 @@ import ru.skypro.homework.entity.Ad;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Интерфейс для маппинга объявлений.
+ * Объект для осуществления маппинга генерирует библиотека MapStruct
+ */
 @Mapper(componentModel = "spring")
 public interface AdMapper {
     //@Mapping(source = "ad.id", target = "pk")
@@ -45,7 +49,7 @@ public interface AdMapper {
     default Ads toAds(List<Ad> adList) {
         Ads ads = new Ads();
         ads.setCount(adList.size());
-        ads.setResult(adList.stream()
+        ads.setResults(adList.stream()
                 .map(this::toAdDTO)
                 .collect(Collectors.toList()));
         return ads;

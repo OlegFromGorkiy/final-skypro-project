@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * Класс пользователя, данные хранятся в базе данных
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,7 +53,7 @@ public class User {
      */
     @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role = Role.USER;
+    private Role role;
 
     /**
      * path to image

@@ -11,6 +11,9 @@ import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
 
+/**
+ * Контроллер по обработке веб запросов по объявлениям
+ */
 @RestController
 @RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")
@@ -29,10 +32,9 @@ public class AdController {
     }
 
     @PostMapping
-    public ResponseEntity<AdDTO> createNewAd(@RequestBody UpdateAd newAd,
-                                             @RequestBody MultipartFile image, Authentication authentication) {
-        //need some code for image in service
-        AdDTO result = adService.createAd(newAd, authentication, image);
+    public ResponseEntity<AdDTO> createNewAd(@RequestPart(name = "properties") UpdateAd object,
+                                             @RequestPart(name = "image") MultipartFile image, Authentication authentication) {
+        AdDTO result = adService.createAd(object, authentication, image);
         return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 

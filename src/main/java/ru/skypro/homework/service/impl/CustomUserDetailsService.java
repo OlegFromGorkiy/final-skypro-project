@@ -12,6 +12,11 @@ import ru.skypro.homework.service.UserService;
 
 import java.util.Collection;
 import java.util.LinkedList;
+
+/**
+ * Сервис для приведения объектов ru.skypro.homework.entity.User к org.springframework.security.core.userdetails.User
+ * Данное приведение объектов требуется для корректной работы Spring security.
+ */
 @Component
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserService userService;
@@ -46,7 +51,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Collection<SimpleGrantedAuthority> result = new LinkedList<>();
         result.add(new SimpleGrantedAuthority("USER"));
         if (role == Role.ADMIN) {
-            result.add(new SimpleGrantedAuthority("ADMIN"));
+            result.add(new SimpleGrantedAuthority("ADMIN")); //Granted Authorities=[ROLE_ADMIN, ROLE_USER]
         }
         return result;
     }

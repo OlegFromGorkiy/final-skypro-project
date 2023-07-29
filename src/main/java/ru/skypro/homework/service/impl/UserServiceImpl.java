@@ -11,6 +11,7 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exception.ForbiddenException;
+import ru.skypro.homework.exception.ReadOrWriteException;
 import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.FileService;
@@ -63,7 +64,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getByEmail(String email) {
         Optional<User> optional = userRepository.findByEmail(email);
-        return optional.isEmpty() ? null : optional.get();
+        return optional.isEmpty() ? null : optional.get();// возможно стоит кинут ошибку
     }
 
     @Override
@@ -101,7 +102,7 @@ public class UserServiceImpl implements UserService {
             }
             fileService.saveFile(path, image.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("User's image was not saved", e);
         }
         user.setImage(path.toString());
         saveUser(user);
@@ -113,7 +114,7 @@ public class UserServiceImpl implements UserService {
         try {
             return fileService.readFile(Path.of(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("User's image was not read", e);
         }
     }
 

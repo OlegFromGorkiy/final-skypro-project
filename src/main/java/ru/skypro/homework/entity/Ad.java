@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Класс объявления, данные хранятся в базе данных
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,14 +31,15 @@ public class Ad {
 
     @Column(name = "title", nullable = false)
     private String title;
-
+    /**
+     * path to image
+     */
     @Column(name = "image")
     private String image;
 
     @Column(name = "description")
     private String description;
 
-    @OneToMany
-    @JoinColumn(name = "comments_id")
+    @OneToMany(mappedBy = "ad", orphanRemoval = true)
     private List<Comment> comments;
 }

@@ -43,7 +43,7 @@ public class CommentMapperTest {
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getAuthor(), COMMENT.getAuthor().getId());
-        Assertions.assertEquals(result.getAuthorImage(), COMMENT.getAuthor().getImage());
+        Assertions.assertEquals(result.getAuthorImage(), "/image/user/" + COMMENT.getAuthor().getEmail());
         Assertions.assertEquals(result.getAuthorFirstName(), COMMENT.getAuthor().getFirstName());
         Assertions.assertEquals(result.getCreatedAt(), COMMENT.getCreatedAt().getTime());
         Assertions.assertEquals(result.getPk(), COMMENT.getId());
@@ -58,7 +58,7 @@ public class CommentMapperTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getAuthor().getId(), COMMENT.getAuthor().getId());
         Assertions.assertEquals(result.getAuthor().getFirstName(), COMMENT.getAuthor().getFirstName());
-        Assertions.assertEquals(result.getAuthor().getImage(), COMMENT.getAuthor().getImage());
+        Assertions.assertEquals(result.getAuthor().getImage(), "/image/user/" + COMMENT.getAuthor().getEmail());
         Assertions.assertEquals(result.getCreatedAt(), COMMENT.getCreatedAt());
         Assertions.assertEquals(result.getId(), COMMENT.getId());
         Assertions.assertEquals(result.getText(), COMMENT.getText());
@@ -74,7 +74,7 @@ public class CommentMapperTest {
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(result.getCount(), comments.size());
-        Assertions.assertEquals(result.getResult(),
+        Assertions.assertEquals(result.getResults(),
                 comments.stream()
                         .map(e -> mapper.toCommentDTO(e))
                         .collect(Collectors.toList()));

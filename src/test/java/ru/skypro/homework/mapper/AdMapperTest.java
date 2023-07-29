@@ -47,7 +47,7 @@ public class AdMapperTest {
         //then
         Assertions.assertNotNull(ads);
         Assertions.assertEquals(ads.getAuthor(), AD.getAuthor().getId());
-        Assertions.assertEquals(ads.getImage(), AD.getImage());
+        Assertions.assertEquals(ads.getImage(), "/image/ad/" + AD.getId());
         Assertions.assertEquals(ads.getPk(), AD.getId());
         Assertions.assertEquals(ads.getPrice(), AD.getPrice());
         Assertions.assertEquals(ads.getTitle(), AD.getTitle());
@@ -64,14 +64,14 @@ public class AdMapperTest {
         Assertions.assertEquals(ads.getAuthorLastName(), AD.getAuthor().getLastName());
         Assertions.assertEquals(ads.getDescription(), AD.getDescription());
         Assertions.assertEquals(ads.getEmail(), AD.getAuthor().getEmail());
-        Assertions.assertEquals(ads.getImage(), AD.getImage());
+        Assertions.assertEquals(ads.getImage(), "/image/ad/" + AD.getId());
         Assertions.assertEquals(ads.getPhone(), AD.getAuthor().getPhone());
         Assertions.assertEquals(ads.getPrice(), AD.getPrice());
         Assertions.assertEquals(ads.getTitle(), AD.getTitle());
     }
 
     @Test
-    public void checkToResponseWrapper() {
+    public void checkToAds() {
         //given
         List<Ad> adList = new LinkedList<>();
         adList.add(AD);
@@ -80,7 +80,7 @@ public class AdMapperTest {
         //then
         Assertions.assertNotNull(responseWrapperAds);
         Assertions.assertEquals(responseWrapperAds.getCount(), adList.size());
-        Assertions.assertEquals(responseWrapperAds.getResult(),
+        Assertions.assertEquals(responseWrapperAds.getResults(),
                 adList.stream()
                         .map(e -> mapper.toAdDTO(e))
                         .collect(Collectors.toList()));
