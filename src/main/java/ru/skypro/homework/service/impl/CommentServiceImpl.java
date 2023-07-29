@@ -25,7 +25,6 @@ public class CommentServiceImpl implements CommentService {
     private final AdService adService;
     private final CommentRepository commentRepository;
     private final CommentMapper mapper;
-
     private final UserService userService;
 
     public CommentServiceImpl(AdService adService, CommentRepository commentRepository,
