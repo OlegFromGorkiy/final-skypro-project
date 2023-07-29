@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * Класс пользователя, данные хранятся в базе данных
+ */
 @Getter
 @Setter
 @NoArgsConstructor

@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Класс объявления, данные хранятся в базе данных
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,7 +31,9 @@ public class Ad {
 
     @Column(name = "title", nullable = false)
     private String title;
-
+    /**
+     * path to image
+     */
     @Column(name = "image")
     private String image;
 

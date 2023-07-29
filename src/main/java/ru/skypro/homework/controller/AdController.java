@@ -11,6 +11,9 @@ import ru.skypro.homework.service.AdService;
 
 import java.io.IOException;
 
+/**
+ * Контроллер по обработке веб запросов по объявлениям
+ */
 @RestController
 @RequestMapping("/ads")
 @CrossOrigin(value = "http://localhost:3000")

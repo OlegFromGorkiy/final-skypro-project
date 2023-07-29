@@ -6,6 +6,10 @@ import ru.skypro.homework.dto.Register;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 
+/**
+ * Интерфейс для маппинга пользователей.
+ * Объект для осуществления маппинга генерирует библиотека MapStruct
+ */
 @Mapper(componentModel = "spring")
 public interface UserMapper {
     @Mapping(source = "role", target = "role")

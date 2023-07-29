@@ -10,6 +10,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Интерфейс для маппинга комментариев.
+ * Объект для осуществления маппинга генерирует библиотека MapStruct
+ */
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 

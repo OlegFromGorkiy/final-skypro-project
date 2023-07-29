@@ -14,6 +14,7 @@ import ru.skypro.homework.entity.Role;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exception.ForbiddenException;
 import ru.skypro.homework.exception.NotFoundElement;
+import ru.skypro.homework.exception.ReadOrWriteException;
 import ru.skypro.homework.mapper.AdMapper;
 import ru.skypro.homework.repository.AdRepository;
 import ru.skypro.homework.service.AdService;
@@ -129,7 +130,7 @@ public class AdServiceImpl implements AdService {
             }
             fileService.saveFile(path, image.getBytes());
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("Ad's image was not saved", e);
         }
         ad.setImage(path.toString());
         saveAd(ad);
@@ -141,7 +142,7 @@ public class AdServiceImpl implements AdService {
         try {
             return fileService.readFile(Path.of(filePath));
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new ReadOrWriteException("Ad's image was not read", e);
         }
     }
 

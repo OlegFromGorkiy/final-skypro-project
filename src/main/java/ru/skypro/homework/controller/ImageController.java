@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import ru.skypro.homework.service.AdService;
 import ru.skypro.homework.service.UserService;
 
+/**
+ * Контроллер по обработке запросов на получение изображений
+ */
 @RestController
 @RequestMapping("/image")
 @CrossOrigin(value = "http://localhost:3000")

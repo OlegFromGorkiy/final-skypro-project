@@ -12,6 +12,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.skypro.homework.service.impl.CustomUserDetailsService;
 
+/**
+ * конфигурации Spring security
+ */
 @Configuration
 public class WebSecurityConfig {
 
@@ -31,20 +34,21 @@ public class WebSecurityConfig {
     public void setUserService(CustomUserDetailsService userDetailsService) {
         this.userDetailsService = userDetailsService;
     }
-/*
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        //пользователь в памяти. После добавления пользователей в базу, можно удалять
-        UserDetails user =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
-                        .roles("USER", "ADMIN")
-                        .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-*/
+
+    /*
+        @Bean
+        public InMemoryUserDetailsManager userDetailsService() {
+            //пользователь в памяти. После добавления пользователей в базу, можно удалять
+            UserDetails user =
+                    User.builder()
+                            .username("user@gmail.com")
+                            .password("password")
+                            .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
+                            .roles("USER", "ADMIN")
+                            .build();
+            return new InMemoryUserDetailsManager(user);
+        }
+    */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();

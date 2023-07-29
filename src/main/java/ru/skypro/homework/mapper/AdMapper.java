@@ -9,6 +9,10 @@ import ru.skypro.homework.entity.Ad;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Интерфейс для маппинга объявлений.
+ * Объект для осуществления маппинга генерирует библиотека MapStruct
+ */
 @Mapper(componentModel = "spring")
 public interface AdMapper {
     //@Mapping(source = "ad.id", target = "pk")

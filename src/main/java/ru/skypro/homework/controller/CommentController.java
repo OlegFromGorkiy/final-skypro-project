@@ -9,6 +9,9 @@ import ru.skypro.homework.dto.Comments;
 import ru.skypro.homework.dto.UpdateComment;
 import ru.skypro.homework.service.CommentService;
 
+/**
+ * Контроллер по обработке запросов с комментариями
+ */
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequestMapping("/ads")

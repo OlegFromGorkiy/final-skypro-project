@@ -8,6 +8,9 @@ import ru.skypro.homework.dto.UpdateUser;
 import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 
+/**
+ * Сервис по изменению данных пользователей
+ */
 public interface UserService {
     /**
      * Сохранение пользователя в базу
@@ -84,6 +87,7 @@ public interface UserService {
 
     /**
      * Получение типа изображения
+     *
      * @param email имя пользователя
      * @return тип изображения как объект MediaType
      */
