@@ -76,7 +76,9 @@ public class UserServiceImpl implements UserService {
     public UserDTO getUserInfo(Authentication authentication) {
         User user = getFromAuthentication(authentication);
         UserDTO result = mapper.toUserDTO(getFromAuthentication(authentication));
-        result.setImage("/image/user/" + user.getEmail());
+        if (user.getImage() == null) {
+            result.setImage(null);
+        } else result.setImage("/image/user/" + user.getEmail());
         return result;
     }
 
@@ -97,7 +99,7 @@ public class UserServiceImpl implements UserService {
         String fileName = user.getId() + sourceName.substring(sourceName.lastIndexOf("."));
         Path path = Path.of(IMAGE_DIRECTORY).resolve(fileName);
         try {
-            if (oldName != null){
+            if (oldName != null) {
                 Files.deleteIfExists(Path.of(oldName));
             }
             fileService.saveFile(path, image.getBytes());

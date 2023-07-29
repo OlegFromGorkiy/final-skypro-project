@@ -95,7 +95,7 @@ public class AdServiceImpl implements AdService {
         ad.setPrice(update.getPrice());
         ad.setTitle(update.getTitle());
         ad.setDescription(update.getDescription());
-        return mapper.toAdDTO(ad);
+        return mapper.toAdDTO(adRepository.save(ad));
     }
 
     @Override
