@@ -10,8 +10,11 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.impl.CustomUserDetailsService;
 
+/**
+ * конфигурации Spring security
+ */
 @Configuration
 public class WebSecurityConfig {
 
@@ -21,34 +24,36 @@ public class WebSecurityConfig {
             "/v3/api-docs",
             "/webjars/**",
             "/login",
-            "/register"
+            "/register",
+            "/ads"
     };
 
-    private UserService userService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
-    public void setUserService(UserService userService) {
-        this.userService = userService;
+    public void setUserService(CustomUserDetailsService userDetailsService) {
+        this.userDetailsService = userDetailsService;
     }
-/*
-    @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
-        //пользователь в памяти. После добавления пользователей в базу, можно удалять
-        UserDetails user =
-                User.builder()
-                        .username("user@gmail.com")
-                        .password("password")
-                        .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
-                        .roles("USER")
-                        .build();
-        return new InMemoryUserDetailsManager(user);
-    }
-*/
+
+    /*
+        @Bean
+        public InMemoryUserDetailsManager userDetailsService() {
+            //пользователь в памяти. После добавления пользователей в базу, можно удалять
+            UserDetails user =
+                    User.builder()
+                            .username("user@gmail.com")
+                            .password("password")
+                            .passwordEncoder((plainText) -> passwordEncoder().encode(plainText))
+                            .roles("USER", "ADMIN")
+                            .build();
+            return new InMemoryUserDetailsManager(user);
+        }
+    */
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(passwordEncoder());
-        authenticationProvider.setUserDetailsService(userService);
+        authenticationProvider.setUserDetailsService(userDetailsService);
         return authenticationProvider;
     }
 
@@ -63,7 +68,7 @@ public class WebSecurityConfig {
                                         .permitAll()
                                         .mvcMatchers("/ads/**", "/users/**")
                                         .authenticated())
-                .cors().disable()
+                .cors().and()
                 .httpBasic(withDefaults());
         return http.build();
     }

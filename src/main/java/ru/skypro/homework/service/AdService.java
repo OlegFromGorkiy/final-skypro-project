@@ -1,18 +1,24 @@
 package ru.skypro.homework.service;
 
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.AdDTO;
+import ru.skypro.homework.dto.Ads;
+import ru.skypro.homework.dto.ExtendedAd;
 import ru.skypro.homework.dto.UpdateAd;
 import ru.skypro.homework.entity.Ad;
-import ru.skypro.homework.entity.User;
 
-import java.util.List;
-
+/**
+ * Сервис для работы с объявлениями
+ */
 public interface AdService {
     /**
      * получить все объявления с базы
      *
-     * @return все объявления из базы в виде списка
+     * @return все объявления из базы в виде объекта DTO
      */
-    List<Ad> getAll();
+    Ads getAll();
 
     /**
      * Сохранеие объявления в базу
@@ -25,42 +31,77 @@ public interface AdService {
     /**
      * Создание нового объявления и сохранение его в базу.
      *
-     * @param newAd     DTO c данными объявления
-     * @param author    пользователь, автор объявления
-     * @param imagePath путь к изображению объявления
-     * @return сохраненный в базу объект
+     * @param newAd          DTO c данными объявления
+     * @param authentication данные авторизированного пользователя, автора объявления
+     * @param image          изображение как объект MultipartFile
+     * @return сохраненный в базу объект в виде объекта DTO
      */
-    Ad createAd(UpdateAd newAd, User author, String imagePath);
+    AdDTO createAd(UpdateAd newAd, Authentication authentication, MultipartFile image);
+
+    /**
+     * Вся информация из объявления
+     *
+     * @param id идентификатор объявления
+     * @return Вся информация из объявления в виде объекта DTO
+     */
+    ExtendedAd getFullInfo(int id);
 
     /**
      * Получение объявления из базы по Id
      *
-     * @param id Id объявления
+     * @param id идентификатор объявления
      * @return null если объявление не найдено
      */
     Ad getById(int id);
 
     /**
-     * Удаление объявления из базы
+     * Удаление объявления
      *
-     * @param ad объявление которое следует удалить; не должно быть null
+     * @param id             идентификатор объявления
+     * @param authentication данные авторизированного пользователя, должен быть автор объявления или администратор
      */
-    void deleteAd(Ad ad);
+    void deleteAd(int id, Authentication authentication);
 
     /**
      * Обновление данных в объявлении и сохранение изменений в базе
      *
-     * @param ad     объявление где будут обновлены данные
-     * @param update данные для обновления
-     * @return обновленной объявление; никогда не будет null
+     * @param id             идентификатор объявления где будут обновлены данные
+     * @param update         данные для обновления в виде объекта DTO
+     * @param authentication данные авторизированного пользователя, должен быть автор объявления или администратор
+     * @return обновленное объявление в виде объекта DTO
      */
-    Ad updateAd(Ad ad, UpdateAd update);
+    AdDTO updateAd(int id, UpdateAd update, Authentication authentication);
 
     /**
      * Список всех объявлений одного автора
      *
-     * @param author автор объявлений
-     * @return список всех объявлений автора
+     * @param authentication данные авторизированного пользователя
+     * @return список всех объявлений от авторизированного пользователя в виде объекта DTO
      */
-    List<Ad> getAllByAuthor(User author);
+    Ads getAllByAuthor(Authentication authentication);
+
+    /**
+     * Обновление фото в объявлении
+     *
+     * @param id             идентификатор объявления где будут обновлены данные
+     * @param image          файл картинки из запроса
+     * @param authentication данные аутентификации пользователя
+     */
+    void updateImage(int id, MultipartFile image, Authentication authentication);
+
+    /**
+     * Получение фото из объявления
+     *
+     * @param id идентификатор объявления
+     * @return содержимое фото
+     */
+    byte[] getImage(int id);
+
+    /**
+     * Получение типа изображения
+     *
+     * @param id идентификатор объявления
+     * @return тип изображения как объект MediaType
+     */
+    MediaType getImageType(int id);
 }

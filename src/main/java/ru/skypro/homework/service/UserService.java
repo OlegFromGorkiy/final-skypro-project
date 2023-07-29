@@ -1,10 +1,17 @@
 package ru.skypro.homework.service;
 
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
+import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
 
-public interface UserService extends UserDetailsService {
+/**
+ * Сервис по изменению данных пользователей
+ */
+public interface UserService {
     /**
      * Сохранение пользователя в базу
      *
@@ -16,10 +23,19 @@ public interface UserService extends UserDetailsService {
     /**
      * Поиск в базе пользователей с аналогичным email
      *
-     * @param user пользователь чей email используется для проверки
+     * @param email email используемый для проверки
      * @return true если в базе уже есть пользователь с аналогичным email
      */
-    boolean emailCheck(User user);
+    boolean emailCheck(String email);
+
+    /**
+     * Изменение пароля пользователя
+     *
+     * @param newPassword    DTO с данными паролей
+     * @param authentication данные аутентификации пользователя
+     * @throws ru.skypro.homework.exception.ForbiddenException если текущий пароль в DTO  не совпадает с сохраненным в базе
+     */
+    void changePassword(NewPassword newPassword, Authentication authentication);
 
     /**
      * Поиск пользователя в базе по email
@@ -30,11 +46,50 @@ public interface UserService extends UserDetailsService {
     User getByEmail(String email);
 
     /**
+     * Пользователь из данных аутентификации
+     *
+     * @param authentication данные аутентификации пользователя
+     * @return объект пользователя из базы
+     */
+    User getFromAuthentication(Authentication authentication);
+
+    /**
+     * Информация о опльзователе в виде DTO
+     *
+     * @param authentication данные аутентификации пользователя
+     * @return DTO с данными пользователя
+     */
+    UserDTO getUserInfo(Authentication authentication);
+
+    /**
      * Обновление данных пользователя
      *
-     * @param user   пользователь чьи данные обновляются; не должен быть null
-     * @param update данные для обновления
-     * @return обновленный пользователь сохраненный в базе; никогда не будет null
+     * @param update         новые данные пользователя в виде DTO
+     * @param authentication данные аутентификации пользователя
      */
-    User updateUser(User user, UpdateUser update);
+    void updateInfo(UpdateUser update, Authentication authentication);
+
+    /**
+     * Устанавливаее новый аватар. Картинка сохраняется. Путь до картинки передается в базу.
+     *
+     * @param image          файл картинки из запроса
+     * @param authentication данные аутентификации пользователя
+     */
+    void setImage(MultipartFile image, Authentication authentication);
+
+    /**
+     * Получение аватара пользователя
+     *
+     * @param email имя пользователя
+     * @return содержимое картинки аватара
+     */
+    byte[] getImage(String email);
+
+    /**
+     * Получение типа изображения
+     *
+     * @param email имя пользователя
+     * @return тип изображения как объект MediaType
+     */
+    MediaType getImageType(String email);
 }

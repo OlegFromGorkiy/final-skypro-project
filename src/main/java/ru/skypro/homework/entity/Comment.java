@@ -5,6 +5,9 @@ import lombok.*;
 import javax.persistence.*;
 import java.util.Date;
 
+/**
+ * Класс комментария, данные хранятся в базе данных
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -22,6 +25,7 @@ public class Comment {
     @Column(name = "text", nullable = false)
     private String text;
 
+    @Column(name = "date")
     private Date createdAt;
 
     @ManyToOne

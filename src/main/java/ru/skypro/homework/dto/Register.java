@@ -3,6 +3,9 @@ package ru.skypro.homework.dto;
 import lombok.Data;
 import ru.skypro.homework.entity.Role;
 
+/**
+ * DTO класс для добавления нового пользователя
+ */
 @Data
 public class Register {
     private String username;

@@ -10,20 +10,25 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Интерфейс для маппинга комментариев.
+ * Объект для осуществления маппинга генерирует библиотека MapStruct
+ */
 @Mapper(componentModel = "spring")
 public interface CommentMapper {
 
     default CommentDTO toCommentDTO(Comment comment) {
         CommentDTO result = new CommentDTO();
         result.setAuthor(comment.getAuthor().getId());
-        result.setAuthorImage(comment.getAuthor().getImage());
+        result.setAuthorImage("/image/user/" + comment.getAuthor().getEmail());
         result.setAuthorFirstName(comment.getAuthor().getFirstName());
         result.setCreatedAt(comment.getCreatedAt().getTime());
-        result.setPk(comment.getAd().getId());
+        result.setPk(comment.getId());
         result.setText(comment.getText());
         return result;
     }
-//вроде не нужен в обновленном АПИ. Пока оставлю.
+
+    //вроде не нужен в обновленном АПИ. Пока оставлю.
     default Comment fromCommentDTO(CommentDTO comment) {
         Comment result = new Comment();
         //need to change with service
@@ -41,7 +46,7 @@ public interface CommentMapper {
     default Comments toComments(List<Comment> comments) {
         Comments result = new Comments();
         result.setCount(comments.size());
-        result.setResult(comments.stream()
+        result.setResults(comments.stream()
                 .map(this::toCommentDTO)
                 .collect(Collectors.toList()));
         return result;

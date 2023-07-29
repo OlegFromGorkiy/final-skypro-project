@@ -1,5 +1,6 @@
 package ru.skypro.homework.service.impl;
 
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
@@ -25,12 +26,16 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean login(String userName, String password) {
-        /*
+/*
         if (!manager.userExists(userName)) {
             return false;
         }
         UserDetails userDetails = manager.loadUserByUsername(userName);
-        */
+        String encryptedPassword = userDetails.getPassword();
+        String encryptedPasswordWithoutEncryptionType = encryptedPassword.substring(8);
+        return encoder.matches(password, encryptedPasswordWithoutEncryptionType);
+*/
+
         User user = userService.getByEmail(userName);
         if (user == null) return false;
         return encoder.matches(password, user.getPassword());
@@ -38,29 +43,29 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public boolean register(Register register, Role role) {
-    /*
-    if (manager.userExists(registerReq.getUsername())) {
+/*
+    if (manager.userExists(register.getUsername())) {
       return false;
     }
     manager.createUser(
         User.builder()
-            .passwordEncoder(this.encoder::encode)
-            .password(registerReq.getPassword())
-            .username(registerReq.getUsername())
+            .password(this.encoder::encode)
+            .password(register.getPassword())
+            .username(register.getUsername())
 
             .roles(role.name())
             .build());
     return true;
-    */
+*/
+
+        if (userService.emailCheck(register.getUsername())) {
+            return false;
+        }
         User user = userMapper.fromRegister(register);
         user.setRole(role);
         user.setPassword(encoder.encode(user.getPassword()));//because unprotected password in database is bad solution
-        if (userService.emailCheck(user)) {
-            return false;
-        }
         userService.saveUser(user);
         return true;
     }
-
 
 }

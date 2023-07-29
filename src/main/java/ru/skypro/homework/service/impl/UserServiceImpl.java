@@ -1,27 +1,43 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.NewPassword;
 import ru.skypro.homework.dto.UpdateUser;
-import ru.skypro.homework.entity.Role;
+import ru.skypro.homework.dto.UserDTO;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exception.ForbiddenException;
+import ru.skypro.homework.exception.ReadOrWriteException;
+import ru.skypro.homework.mapper.UserMapper;
 import ru.skypro.homework.repository.UserRepository;
+import ru.skypro.homework.service.FileService;
 import ru.skypro.homework.service.UserService;
 
-import java.util.Collection;
-import java.util.LinkedList;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+    private final String IMAGE_DIRECTORY;
+    private final FileService fileService;
+    private final UserMapper mapper;
     private final UserRepository userRepository;
+    private final PasswordEncoder encoder;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(@Value("${path.to.user.images}") String imageDirectory, FileService fileService,
+                           UserMapper mapper, UserRepository userRepository, PasswordEncoder encoder) {
+        IMAGE_DIRECTORY = imageDirectory;
+        this.fileService = fileService;
+        this.mapper = mapper;
         this.userRepository = userRepository;
+        this.encoder = encoder;
     }
 
     @Override
@@ -30,56 +46,82 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public boolean emailCheck(User user) {
-        return userRepository.existsByEmail(user.getEmail());
+    public boolean emailCheck(String email) {
+        return userRepository.existsByEmail(email);
     }
 
+    @Override
+    public void changePassword(NewPassword newPassword, Authentication authentication) {
+        User user = getFromAuthentication(authentication);
+        if (!(encoder.matches(newPassword.getCurrentPassword(), user.getPassword()))) {
+            throw new ForbiddenException(String.format("Wrong current password entered by %s",
+                    user.getEmail()));
+        }
+        user.setPassword(encoder.encode(newPassword.getNewPassword()));
+        saveUser(user);
+    }
 
     @Override
     public User getByEmail(String email) {
         Optional<User> optional = userRepository.findByEmail(email);
-        return optional.isEmpty() ? null : optional.get();
+        return optional.isEmpty() ? null : optional.get();// возможно стоит кинут ошибку
     }
 
     @Override
-    public User updateUser(User user, UpdateUser update) {
+    public User getFromAuthentication(Authentication authentication) {
+        return getByEmail(authentication.getName());
+    }
+
+    @Override
+    public UserDTO getUserInfo(Authentication authentication) {
+        User user = getFromAuthentication(authentication);
+        UserDTO result = mapper.toUserDTO(getFromAuthentication(authentication));
+        result.setImage("/image/user/" + user.getEmail());
+        return result;
+    }
+
+    @Override
+    public void updateInfo(UpdateUser update, Authentication authentication) {
+        User user = getFromAuthentication(authentication);
         user.setFirstName(update.getFirstname());
         user.setLastName(update.getLastName());
-        user.setPhone(update.getPhone());
-        return saveUser(user);
+        user.setPhone(user.getPhone());
+        saveUser(user);
     }
 
-
-//UserDetailsService implementation
-    /**
-     * Locates the user based on the username. In the actual implementation, the search
-     * may possibly be case sensitive, or case insensitive depending on how the
-     * implementation instance is configured. In this case, the <code>UserDetails</code>
-     * object that comes back may have a username that is of a different case than what
-     * was actually requested..
-     *
-     * @param username the username identifying the user whose data is required.
-     * @return a fully populated user record (never <code>null</code>)
-     * @throws UsernameNotFoundException if the user could not be found or the user has no
-     *                                   GrantedAuthority
-     */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = getByEmail(username);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("User with email address %s, not found", username));
+    public void setImage(MultipartFile image, Authentication authentication) {
+        User user = getFromAuthentication(authentication);
+        String oldName = user.getImage();
+        String sourceName = image.getOriginalFilename();//"image.jpg";//
+        String fileName = user.getId() + sourceName.substring(sourceName.lastIndexOf("."));
+        Path path = Path.of(IMAGE_DIRECTORY).resolve(fileName);
+        try {
+            if (oldName != null){
+                Files.deleteIfExists(Path.of(oldName));
+            }
+            fileService.saveFile(path, image.getBytes());
+        } catch (IOException e) {
+            throw new ReadOrWriteException("User's image was not saved", e);
         }
-
-        return new org.springframework.security.core.userdetails.User(user.getEmail(),
-                user.getPassword(), mapRoleToAuthorities(user.getRole()));
+        user.setImage(path.toString());
+        saveUser(user);
     }
 
-    private Collection<? extends GrantedAuthority> mapRoleToAuthorities(Role role) {
-        Collection<SimpleGrantedAuthority> result = new LinkedList<>();
-        result.add(new SimpleGrantedAuthority("USER"));
-        if (role == Role.ADMIN) {
-            result.add(new SimpleGrantedAuthority("ADMIN"));
+    @Override
+    public byte[] getImage(String email) {
+        String filePath = getByEmail(email).getImage();
+        try {
+            return fileService.readFile(Path.of(filePath));
+        } catch (IOException e) {
+            throw new ReadOrWriteException("User's image was not read", e);
         }
-        return result;
+    }
+
+    @Override
+    public MediaType getImageType(String email) {
+        String filePath = getByEmail(email).getImage();
+        String subtype = filePath.substring(filePath.lastIndexOf(".")).replace(".", "");
+        return new MediaType("image", subtype);
     }
 }
