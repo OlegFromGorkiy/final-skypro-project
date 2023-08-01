@@ -1,2 +1,2 @@
 insert into users (id, email, first_name, image, last_name, password, phone, role)
-values (1, 'new_user@mail.ru', 'Oleg', null, 'Karteshev', '123456789', '+79873529885', 'ADMIN');
+values (1, 'admin@mail.com', 'Admin', 'images\user\1.gif', 'Admin', '$2a$12$TSA9l3SaGsgf/Fz8RTRNfuwvUas8qf7d.dWDrj8P7C3DAxw4ycBFS', '+79873529885', 'ADMIN');
